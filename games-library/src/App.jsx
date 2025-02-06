@@ -1,16 +1,27 @@
 import { useState } from "react"
 
 export default function App() {
-
+  const [games, setGames] = useState([])
   const[title, setTitle] = useState("")
   const[cover, setCover] = useState("")
 
+  const addGame = ({title, cover}) =>{
+    const id = Math.floor(Math.random() * 1000000)
+    const game = {id, title, cover}
+    setGames(state => [...state, game])
+  }
+
+  const removeGame = (id) =>{
+    setGames(state => state.filter(game => game.id !== id))
+  }
+
   const handleSubmit = (ev) =>{
     ev.preventDefault()
-    console.log({title, cover})
+    addGame({title, cover})
     setTitle("")
     setCover("")
   }
+
   return(
     <div id="app">
       <h1>Biblioteca de Jogos</h1>
@@ -37,6 +48,17 @@ export default function App() {
         </div>
         <button type="submit">Adicionar à biblioteca</button>
       </form>
+      <div className="games">
+        {games.map((game) =>(
+          <div key={game.id}>
+            <img src={game.cover} alt="" />
+            <div>
+              <h2>{game.title}</h2>
+              <button onClick={() => removeGame(game.id)}>Remover</button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
